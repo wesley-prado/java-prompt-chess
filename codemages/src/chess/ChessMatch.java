@@ -32,31 +32,32 @@ public class ChessMatch {
 	}
 
 	private void placeBlackPieces() {
-		int startRow = 0;
-		placePieces(startRow,
+		placePieces(Color.BLACK,
 				ChessPieceFactory.createFirstRowPieces(board, Color.BLACK));
-		placePawns(++startRow, Color.BLACK);
+		placePawns(Color.BLACK);
 	}
 
 	private void placeWhitePieces() {
-		int startRow = 7;
-		placePieces(startRow,
+		placePieces(Color.WHITE,
 				ChessPieceFactory.createFirstRowPieces(board, Color.WHITE));
-		placePawns(--startRow, Color.WHITE);
+		placePawns(Color.WHITE);
 	}
 
-	private void placePieces(int startRow,
-			List<ChessPiece> pieces) {
-		for (int i = 0; i < pieces.size(); i++) {
-			board.placePiece(pieces.get(i), new Position(startRow, i));
+	private void placePieces(Color color, List<ChessPiece> pieces) {
+		int row = color == Color.BLACK ? 0 : 7;
+
+		for (int column = 0; column < pieces.size(); column++) {
+			board.placePiece(pieces.get(column), new Position(row, column));
 		}
 	}
 
-	private void placePawns(int startRow, Color color) {
-		for (int i = 0; i < board.getColumns(); i++) {
+	private void placePawns(Color color) {
+		int row = color == Color.BLACK ? 1 : 6;
+
+		for (int column = 0; column < board.getColumns(); column++) {
 			board.placePiece(
 					ChessPieceFactory.createPiece(PieceType.PAWN, board, color),
-					new Position(startRow, i));
+					new Position(row, column));
 		}
 	}
 }

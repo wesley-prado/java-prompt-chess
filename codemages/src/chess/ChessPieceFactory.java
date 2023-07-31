@@ -11,7 +11,7 @@ import chess.pieces.Pawn;
 import chess.pieces.Queen;
 import chess.pieces.Rook;
 
-public class ChessPieceFactory {
+public final class ChessPieceFactory {
 	private ChessPieceFactory() {
 	}
 
