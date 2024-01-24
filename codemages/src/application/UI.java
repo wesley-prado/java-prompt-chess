@@ -7,6 +7,7 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 
 public class UI {
+	public static final String ANSI_CLEAR_SCREEN = "\033[H\033[2J";
 	public static final String ANSI_RESET = "\u001B[0m";
 	public static final String ANSI_BLACK = "\u001B[30m";
 	public static final String ANSI_RED = "\u001B[31m";
@@ -29,6 +30,11 @@ public class UI {
 	private UI() {
 	}
 
+	public static void clearScreen() {
+		System.out.print(ANSI_CLEAR_SCREEN);
+		System.out.flush();
+	}
+
 	public static ChessPosition readChessPiece(Scanner sc) {
 		try {
 			String s = sc.nextLine();
@@ -37,7 +43,7 @@ public class UI {
 
 			return new ChessPosition(column, row);
 		} catch (RuntimeException e) {
-			throw new InputMismatchException("Error reading ChessPosition. Valid range of values is a1 to h8.");
+			throw new InputMismatchException(e.getMessage());
 		}
 	}
 
