@@ -3,7 +3,6 @@ package chess;
 import java.util.List;
 
 import boardgame.Board;
-import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessPieceFactory.PieceType;
 
@@ -27,31 +26,6 @@ public class ChessMatch {
 		return matrix;
 	}
 
-	public ChessPiece performChessPiece(ChessPosition sourcePosition, ChessPosition targetPosition) {
-		Position source = sourcePosition.toPosition();
-		Position target = targetPosition.toPosition();
-
-		validateSourcePosition(source);
-
-		Piece capturedPiece = makeMove(source, target);
-
-		return (ChessPiece) capturedPiece;
-	}
-
-	private void validateSourcePosition(Position position) {
-		if (!board.isThereAPiece(position)) {
-			throw new ChessException("There is no piece on source position");
-		}
-	}
-
-	private Piece makeMove(Position source, Position target) {
-		Piece piece = board.removePiece(source);
-		Piece capturedPiece = board.removePiece(target);
-		board.placePiece(piece, target);
-
-		return capturedPiece;
-	}
-
 	private void initialSetup() {
 		placeBlackPieces();
 		placeWhitePieces();
@@ -73,7 +47,7 @@ public class ChessMatch {
 		int row = color == Color.BLACK ? 0 : 7;
 
 		for (int column = 0; column < pieces.size(); column++) {
-			board.placePiece(pieces.get(column), new ChessPosition((char) ('a' + column), row + 1).toPosition());
+			board.placePiece(pieces.get(column), new Position(row, column));
 		}
 	}
 
@@ -83,7 +57,7 @@ public class ChessMatch {
 		for (int column = 0; column < board.getColumns(); column++) {
 			board.placePiece(
 					ChessPieceFactory.createPiece(PieceType.PAWN, board, color),
-					new ChessPosition((char) (column + 'a'), row + 1).toPosition());
+					new Position(row, column));
 		}
 	}
 }

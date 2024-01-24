@@ -1,10 +1,6 @@
 package application;
 
-import java.util.InputMismatchException;
-import java.util.Scanner;
-
 import chess.ChessPiece;
-import chess.ChessPosition;
 
 public class UI {
 	public static final String ANSI_CLEAR_SCREEN = "\033[H\033[2J";
