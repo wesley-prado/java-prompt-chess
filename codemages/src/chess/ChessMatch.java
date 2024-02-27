@@ -8,11 +8,23 @@ import boardgame.Position;
 import chess.ChessPieceFactory.PieceType;
 
 public class ChessMatch {
+	private int turn;
+	private Color currentPlayer;
 	private Board board;
 
 	public ChessMatch() {
+		turn = 1;
+		currentPlayer = Color.WHITE;
 		board = new Board(8, 8);
 		initialSetup();
+	}
+
+	public int getTurn() {
+		return this.turn;
+	}
+
+	public Color getCurrentPlayer() {
+		return this.currentPlayer;
 	}
 
 	public ChessPiece[][] getPieces() {
@@ -43,6 +55,8 @@ public class ChessMatch {
 
 		Piece capturedPiece = makeMove(source, target);
 
+		nextTurn();
+
 		return (ChessPiece) capturedPiece;
 	}
 
@@ -51,8 +65,14 @@ public class ChessMatch {
 			throw new ChessException("There is no piece on source position");
 		}
 
-		if (!board.getPiece(source).isThereAnyPossibleMove()) {
+		ChessPiece piece = (ChessPiece) board.getPiece(source);
+
+		if (!piece.isThereAnyPossibleMove()) {
 			throw new ChessException("There is no available move for the chosen piece");
+		}
+
+		if (piece.getColor() != this.currentPlayer) {
+			throw new ChessException("The chosen piece is not yours");
 		}
 	}
 
@@ -60,6 +80,11 @@ public class ChessMatch {
 		if (!board.getPiece(source).possibleMove(target)) {
 			throw new ChessException("The chosen piece can't move to target position");
 		}
+	}
+
+	private void nextTurn() {
+		this.turn++;
+		this.currentPlayer = this.currentPlayer == Color.WHITE ? Color.BLACK : Color.WHITE;
 	}
 
 	private Piece makeMove(Position source, Position target) {
