@@ -3,14 +3,11 @@ package chess.pieces;
 import java.util.List;
 
 import boardgame.Board;
-import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessPiece;
 import chess.Color;
 
 public class King extends ChessPiece {
-	private boolean disableOpponentMoveCalculation = false;
-
 	public King(Board chessboard, Color color) {
 		super(chessboard, color);
 	}
@@ -37,18 +34,7 @@ public class King extends ChessPiece {
 				new Position(row + 1, column - 1), // bottom left
 				new Position(row + 1, column + 1)); // bottom right
 
-		boolean[][] possibleMoves = checkKingMoves(board, positions);
-
-		if (isOpponentMoveCalculationDisabled()) {
-			enableOpponentMoveCalculation();
-			return possibleMoves;
-		}
-
-		List<Piece> opponentPieces = board.getOpponentPieces(this.getColor());
-
-		uncheckUnsafeKingMoves(board, opponentPieces, possibleMoves, positions);
-
-		return possibleMoves;
+		return checkKingMoves(board, positions);
 	}
 
 	private boolean[][] checkKingMoves(Board board, List<Position> positions) {
@@ -63,28 +49,6 @@ public class King extends ChessPiece {
 		return possibleMoves;
 	}
 
-	private void uncheckUnsafeKingMoves(Board board, List<Piece> opponentPieces, boolean[][] possibleMoves,
-			List<Position> positions) {
-		for (Piece opponentPiece : opponentPieces) {
-			ChessPiece chessPiece = (ChessPiece) opponentPiece;
-
-			if (chessPiece instanceof King) {
-				((King) chessPiece).disableOpponentMoveCalculation();
-			}
-
-			boolean[][] opponentMoves = chessPiece.possibleMoves();
-
-			for (Position position : positions) {
-				int row = position.getRow();
-				int column = position.getColumn();
-
-				if (board.isPositionValid(position) && opponentMoves[row][column] && possibleMoves[row][column]) {
-					possibleMoves[row][column] = false;
-				}
-			}
-		}
-	}
-
 	private boolean checkValidMove(Board board, Position position, Color color) {
 		boolean isPositionValid = board.isPositionValid(position);
 
@@ -94,17 +58,5 @@ public class King extends ChessPiece {
 		ChessPiece piece = (ChessPiece) board.getPiece(position);
 
 		return piece == null || piece.getColor() != color;
-	}
-
-	public void disableOpponentMoveCalculation() {
-		this.disableOpponentMoveCalculation = true;
-	}
-
-	private void enableOpponentMoveCalculation() {
-		this.disableOpponentMoveCalculation = false;
-	}
-
-	public boolean isOpponentMoveCalculationDisabled() {
-		return this.disableOpponentMoveCalculation;
 	}
 }
