@@ -12,7 +12,7 @@ public class Board {
 	private int rows;
 	private int columns;
 	private Piece[][] pieces;
-	private HashMap<String, Piece> piecesPositions;
+	private HashMap<String, Piece> piecesOnBoard;
 
 	public Board(int rows, int columns) {
 		if (rows < 1 || columns < 1)
@@ -22,7 +22,7 @@ public class Board {
 		this.rows = rows;
 		this.columns = columns;
 		pieces = new Piece[rows][columns];
-		piecesPositions = new HashMap<>();
+		piecesOnBoard = new HashMap<>();
 	}
 
 	public int getRows() {
@@ -50,14 +50,14 @@ public class Board {
 			throw new BoardException(
 					"There is already a piece on position " + position);
 
-		piecesPositions.put(getPieceMapKey(position.getRow(), position.getColumn()), piece);
+		piecesOnBoard.put(getPieceMapKey(position.getRow(), position.getColumn()), piece);
 		pieces[position.getRow()][position.getColumn()] = piece;
 		piece.position = position;
 	}
 
 	public Piece removePiece(Position position) {
 		Piece piece = getPiece(position);
-		piecesPositions.remove(getPieceMapKey(position.getRow(), position.getColumn()));
+		piecesOnBoard.remove(getPieceMapKey(position.getRow(), position.getColumn()));
 		pieces[position.getRow()][position.getColumn()] = null;
 		return piece;
 	}
@@ -89,7 +89,7 @@ public class Board {
 	public List<Piece> getOpponentPieces(Color color) {
 		List<Piece> opponentPieces = new ArrayList<>();
 
-		for (Map.Entry<String, Piece> entry : piecesPositions.entrySet()) {
+		for (Map.Entry<String, Piece> entry : piecesOnBoard.entrySet()) {
 			ChessPiece p = (ChessPiece) entry.getValue();
 
 			if (p.getColor() != color) {
@@ -100,29 +100,7 @@ public class Board {
 		return opponentPieces;
 	}
 
-	// public boolean[][] getOpponentAvailableMoves(Color color) {
-	// boolean[][] allmoves = new boolean[rows][columns];
-
-	// System.out.println(piecesPositions.toString());
-
-	// for (Map.Entry<String, Piece> entry : piecesPositions.entrySet()) {
-	// ChessPiece p = (ChessPiece) entry.getValue();
-
-	// System.out.println(p.getColor() == color);
-	// if (p.getColor() == color)
-	// continue;
-
-	// boolean[][] pieceMoves = p.possibleMoves();
-
-	// for (int row = 0; row < pieceMoves.length; row++) {
-	// for (int column = 0; column < pieceMoves[row].length; column++) {
-	// if (!allmoves[row][column]) {
-	// allmoves[row][column] = pieceMoves[row][column];
-	// }
-	// }
-	// }
-	// }
-
-	// return allmoves;
-	// }
+	public Map<String, Piece> getPiecesOnBoard() {
+		return this.piecesOnBoard;
+	}
 }
