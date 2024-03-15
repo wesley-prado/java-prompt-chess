@@ -12,6 +12,7 @@ import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessPieceFactory.PieceType;
 import chess.pieces.King;
+import chess.pieces.Rook;
 
 public class ChessMatch {
 	private int turn;
@@ -19,6 +20,7 @@ public class ChessMatch {
 	private Board board;
 	private List<ChessPiece> capturedPieces = new ArrayList<>();
 	private boolean check;
+	private boolean checkMate;
 
 	public ChessMatch() {
 		turn = 1;
@@ -31,8 +33,12 @@ public class ChessMatch {
 		return this.turn;
 	}
 
-	public boolean isCheck() {
+	public boolean getCheck() {
 		return this.check;
+	}
+
+	public boolean getCheckMate() {
+		return this.checkMate;
 	}
 
 	public Color getCurrentPlayer() {
@@ -78,7 +84,11 @@ public class ChessMatch {
 
 		this.check = isInCheck(opponent(this.currentPlayer));
 
-		nextTurn();
+		if (this.isCheckMate(opponent(this.currentPlayer))) {
+			this.checkMate = true;
+		} else {
+			nextTurn();
+		}
 	}
 
 	private void validateSourcePosition(Position source) {
@@ -164,9 +174,47 @@ public class ChessMatch {
 		return false;
 	}
 
+	private boolean isCheckMate(Color color) {
+		if (!this.isInCheck(color)) {
+			return false;
+		}
+
+		List<Piece> pieces = this.board.getPiecesOnBoard().values().stream()
+				.filter(piece -> ((ChessPiece) piece).getColor() == color)
+				.collect(Collectors.toList());
+
+		for (Piece p : pieces) {
+			boolean[][] possibleMoves = p.possibleMoves();
+
+			for (int row = 0; row < this.board.getRows(); row++) {
+				for (int column = 0; column < this.board.getColumns(); column++) {
+					if (possibleMoves[row][column]) {
+						Position source = ((ChessPiece) p).getChessPosition().toPosition();
+						Position target = new Position(row, column);
+						Piece capturedPiece = makeMove(source, target);
+						boolean isInCheck = this.isInCheck(color);
+						this.undoMove(source, target, capturedPiece);
+
+						if (!isInCheck) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
 	private void initialSetup() {
-		placeBlackPieces();
-		placeWhitePieces();
+		board.placePiece(new Rook(board, Color.WHITE), new ChessPosition('h', 7).toPosition());
+		board.placePiece(new Rook(board, Color.WHITE), new ChessPosition('d', 1).toPosition());
+		board.placePiece(new King(board, Color.WHITE), new ChessPosition('e', 1).toPosition());
+
+		board.placePiece(new Rook(board, Color.BLACK), new ChessPosition('b', 8).toPosition());
+		board.placePiece(new King(board, Color.BLACK), new ChessPosition('a', 8).toPosition());
+		// placeBlackPieces();
+		// placeWhitePieces();
 	}
 
 	private void placeBlackPieces() {
