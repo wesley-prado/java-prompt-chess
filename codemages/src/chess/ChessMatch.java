@@ -1,10 +1,7 @@
 package chess;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import boardgame.Board;
@@ -12,7 +9,6 @@ import boardgame.Piece;
 import boardgame.Position;
 import chess.ChessPieceFactory.PieceType;
 import chess.pieces.King;
-import chess.pieces.Rook;
 
 public class ChessMatch {
 	private int turn;
@@ -188,24 +184,32 @@ public class ChessMatch {
 		for (Piece p : pieces) {
 			boolean[][] possibleMoves = p.possibleMoves();
 
-			for (int row = 0; row < this.board.getRows(); row++) {
-				for (int column = 0; column < this.board.getColumns(); column++) {
-					if (possibleMoves[row][column]) {
-						Position source = ((ChessPiece) p).getChessPosition().toPosition();
-						Position target = new Position(row, column);
-						Piece capturedPiece = makeMove(source, target);
-						boolean isInCheck = this.isInCheck(color);
-						this.undoMove(source, target, capturedPiece);
+			if (hasEscapeMoves(p, possibleMoves, color)) {
+				return false;
+			}
+		}
 
-						if (!isInCheck) {
-							return false;
-						}
+		return true;
+	}
+
+	private boolean hasEscapeMoves(Piece piece, boolean[][] possibleMoves, Color color) {
+		for (int row = 0; row < this.board.getRows(); row++) {
+			for (int column = 0; column < this.board.getColumns(); column++) {
+				if (possibleMoves[row][column]) {
+					Position source = ((ChessPiece) piece).getChessPosition().toPosition();
+					Position target = new Position(row, column);
+					Piece capturedPiece = makeMove(source, target);
+					boolean isInCheck = this.isInCheck(color);
+					this.undoMove(source, target, capturedPiece);
+
+					if (!isInCheck) {
+						return true;
 					}
 				}
 			}
 		}
 
-		return true;
+		return false;
 	}
 
 	private void initialSetup() {
