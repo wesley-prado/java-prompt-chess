@@ -45,6 +45,10 @@ public class ChessMatch {
 		return capturedPieces;
 	}
 
+	public Board getBoard() {
+		return this.board;
+	}
+
 	public ChessPiece[][] getPieces() {
 		ChessPiece[][] matrix = new ChessPiece[board.getRows()][board
 				.getColumns()];
@@ -82,7 +86,8 @@ public class ChessMatch {
 
 		if (this.isCheckMate(opponent(this.currentPlayer))) {
 			this.checkMate = true;
-		} else {
+		}
+		else {
 			nextTurn();
 		}
 	}
@@ -213,37 +218,51 @@ public class ChessMatch {
 	}
 
 	private void initialSetup() {
-		placeBlackPieces();
-		placeWhitePieces();
+		placePieces(Color.WHITE);
+		placePieces(Color.BLACK);
 	}
 
-	private void placeBlackPieces() {
-		placePieces(Color.BLACK,
-				ChessPieceFactory.createFirstRowPieces(board, Color.BLACK));
-		placePawns(Color.BLACK);
+	private void placePieces(Color color) {
+		boolean isWhite = color == Color.WHITE;
+		int row = isWhite ? 1 : 8;
+		int pawnRow = isWhite ? row + 1 : row - 1;
+
+		placePiece(ChessPieceFactory.createPiece(PieceType.ROOK, this, color),
+				new ChessPosition('a', row));
+		placePiece(ChessPieceFactory.createPiece(PieceType.KNIGHT, this, color),
+				new ChessPosition('b', row));
+		placePiece(ChessPieceFactory.createPiece(PieceType.BISHOP, this, color),
+				new ChessPosition('c', row));
+		placePiece(ChessPieceFactory.createPiece(PieceType.QUEEN, this, color),
+				new ChessPosition('d', row));
+		placePiece(ChessPieceFactory.createPiece(PieceType.KING, this, color),
+				new ChessPosition('e', row));
+		placePiece(ChessPieceFactory.createPiece(PieceType.BISHOP, this, color),
+				new ChessPosition('f', row));
+		placePiece(ChessPieceFactory.createPiece(PieceType.KNIGHT, this, color),
+				new ChessPosition('g', row));
+		placePiece(ChessPieceFactory.createPiece(PieceType.ROOK, this, color),
+				new ChessPosition('h', row));
+
+		placePiece(ChessPieceFactory.createPiece(PieceType.PAWN, this, color),
+				new ChessPosition('a', pawnRow));
+		placePiece(ChessPieceFactory.createPiece(PieceType.PAWN, this, color),
+				new ChessPosition('b', pawnRow));
+		placePiece(ChessPieceFactory.createPiece(PieceType.PAWN, this, color),
+				new ChessPosition('c', pawnRow));
+		placePiece(ChessPieceFactory.createPiece(PieceType.PAWN, this, color),
+				new ChessPosition('d', pawnRow));
+		placePiece(ChessPieceFactory.createPiece(PieceType.PAWN, this, color),
+				new ChessPosition('e', pawnRow));
+		placePiece(ChessPieceFactory.createPiece(PieceType.PAWN, this, color),
+				new ChessPosition('f', pawnRow));
+		placePiece(ChessPieceFactory.createPiece(PieceType.PAWN, this, color),
+				new ChessPosition('g', pawnRow));
+		placePiece(ChessPieceFactory.createPiece(PieceType.PAWN, this, color),
+				new ChessPosition('h', pawnRow));
 	}
 
-	private void placeWhitePieces() {
-		placePieces(Color.WHITE,
-				ChessPieceFactory.createFirstRowPieces(board, Color.WHITE));
-		placePawns(Color.WHITE);
-	}
-
-	private void placePieces(Color color, List<ChessPiece> pieces) {
-		int row = color == Color.BLACK ? 0 : 7;
-
-		for (int column = 0; column < pieces.size(); column++) {
-			board.placePiece(pieces.get(column), new Position(row, column));
-		}
-	}
-
-	private void placePawns(Color color) {
-		int row = color == Color.BLACK ? 1 : 6;
-
-		for (int column = 0; column < board.getColumns(); column++) {
-			board.placePiece(
-					ChessPieceFactory.createPiece(PieceType.PAWN, board, color),
-					new Position(row, column));
-		}
+	private void placePiece(Piece piece, ChessPosition chessPosition) {
+		board.placePiece(piece, chessPosition.toPosition());
 	}
 }
