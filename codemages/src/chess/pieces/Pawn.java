@@ -62,7 +62,7 @@ public class Pawn extends ChessPiece {
 			matrix[p2.getRow()][p2.getColumn()] = true;
 		}
 
-		p.setValues(startRow + 1, startColumn + 1);
+		p.setValues(startRow + 1, startColumn - 1);
 		if (isDiagonalMovementValid(board, p)) {
 			matrix[p.getRow()][p.getColumn()] = true;
 		}
