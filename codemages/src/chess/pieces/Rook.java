@@ -29,10 +29,8 @@ public class Rook extends ChessPiece {
 	}
 
 	private void checkUpSquares(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() - 1;
-		p.setValues(row, this.position.getColumn());
+		Position p = new Position(row, this.position.getColumn());
 
 		while (this.getBoard().isPositionValid(p) && !this.getBoard().isThereAPiece(p)) {
 			matrix[p.getRow()][p.getColumn()] = true;
@@ -43,10 +41,8 @@ public class Rook extends ChessPiece {
 	}
 
 	private void checkDownSquares(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() + 1;
-		p.setValues(row, this.position.getColumn());
+		Position p = new Position(row, this.position.getColumn());
 
 		while (this.getBoard().isPositionValid(p) && !this.getBoard().isThereAPiece(p)) {
 			matrix[p.getRow()][p.getColumn()] = true;
@@ -57,10 +53,8 @@ public class Rook extends ChessPiece {
 	}
 
 	private void checkLeftSquares(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int column = this.position.getColumn() - 1;
-		p.setValues(this.position.getRow(), column);
+		Position p = new Position(this.position.getRow(), column);
 
 		while (this.getBoard().isPositionValid(p) && !this.getBoard().isThereAPiece(p)) {
 			matrix[p.getRow()][p.getColumn()] = true;
@@ -71,10 +65,8 @@ public class Rook extends ChessPiece {
 	}
 
 	private void checkRightSquares(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int column = this.position.getColumn() + 1;
-		p.setValues(this.position.getRow(), column);
+		Position p = new Position(this.position.getRow(), column);
 
 		while (this.getBoard().isPositionValid(p) && !this.getBoard().isThereAPiece(p)) {
 			matrix[p.getRow()][p.getColumn()] = true;

@@ -29,11 +29,9 @@ public class Bishop extends ChessPiece {
 	}
 
 	private void checkUpLeftSquares(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() - 1;
 		int column = this.position.getColumn() - 1;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		while (this.getBoard().isPositionValid(p) && !this.getBoard().isThereAPiece(p)) {
 			matrix[p.getRow()][p.getColumn()] = true;
@@ -44,11 +42,9 @@ public class Bishop extends ChessPiece {
 	}
 
 	private void checkUpRightSquares(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() - 1;
 		int column = this.position.getColumn() + 1;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		while (this.getBoard().isPositionValid(p) && !this.getBoard().isThereAPiece(p)) {
 			matrix[p.getRow()][p.getColumn()] = true;
@@ -59,11 +55,9 @@ public class Bishop extends ChessPiece {
 	}
 
 	private void checkDownLeftSquares(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() + 1;
 		int column = this.position.getColumn() - 1;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		while (this.getBoard().isPositionValid(p) && !this.getBoard().isThereAPiece(p)) {
 			matrix[p.getRow()][p.getColumn()] = true;
@@ -74,11 +68,9 @@ public class Bishop extends ChessPiece {
 	}
 
 	private void checkDownRightSquares(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() + 1;
 		int column = this.position.getColumn() + 1;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		while (this.getBoard().isPositionValid(p) && !this.getBoard().isThereAPiece(p)) {
 			matrix[p.getRow()][p.getColumn()] = true;

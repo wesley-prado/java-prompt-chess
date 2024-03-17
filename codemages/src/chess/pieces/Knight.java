@@ -33,88 +33,72 @@ public class Knight extends ChessPiece {
 	}
 
 	private void upLeftLMovement(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() - 2;
 		int column = this.position.getColumn() - 1;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		checkPosition(matrix, p);
 		checkCapturablePiece(matrix, p);
 	}
 
 	private void upRightLMovement(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() - 2;
 		int column = this.position.getColumn() + 1;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		checkPosition(matrix, p);
 		checkCapturablePiece(matrix, p);
 	}
 
 	private void downLeftLMovement(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() + 2;
 		int column = this.position.getColumn() - 1;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		checkPosition(matrix, p);
 		checkCapturablePiece(matrix, p);
 	}
 
 	private void downRightLMovement(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() + 2;
 		int column = this.position.getColumn() + 1;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		checkPosition(matrix, p);
 		checkCapturablePiece(matrix, p);
 	}
 
 	private void leftUpLMovement(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() - 1;
 		int column = this.position.getColumn() - 2;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		checkPosition(matrix, p);
 		checkCapturablePiece(matrix, p);
 	}
 
 	private void leftDownLMovement(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() + 1;
 		int column = this.position.getColumn() - 2;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		checkPosition(matrix, p);
 		checkCapturablePiece(matrix, p);
 	}
 
 	private void rightUpLMovement(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() - 1;
 		int column = this.position.getColumn() + 2;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		checkPosition(matrix, p);
 		checkCapturablePiece(matrix, p);
 	}
 
 	private void rightDownLMovement(boolean[][] matrix) {
-		Position p = new Position(0, 0);
-
 		int row = this.position.getRow() + 1;
 		int column = this.position.getColumn() + 2;
-		p.setValues(row, column);
+		Position p = new Position(row, column);
 
 		checkPosition(matrix, p);
 		checkCapturablePiece(matrix, p);
