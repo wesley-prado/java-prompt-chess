@@ -4,12 +4,16 @@ import java.util.List;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.Color;
 
 public class King extends ChessPiece {
-	public King(Board chessboard, Color color) {
+	private ChessMatch chessMatch;
+
+	public King(Board chessboard, Color color, ChessMatch chessMatch) {
 		super(chessboard, color);
+		this.chessMatch = chessMatch;
 	}
 
 	@Override
@@ -20,11 +24,12 @@ public class King extends ChessPiece {
 	@Override
 	public boolean[][] possibleMoves() {
 		Board board = getBoard();
+		boolean[][] possibleMoves = new boolean[board.getRows()][board.getColumns()];
 
 		int row = this.position.getRow();
 		int column = this.position.getColumn();
 
-		List<Position> positions = List.of(
+		checkKingStandardMoves(board, possibleMoves, List.of(
 				new Position(row - 1, column), // top
 				new Position(row + 1, column), // bottom
 				new Position(row, column - 1), // left
@@ -32,21 +37,65 @@ public class King extends ChessPiece {
 				new Position(row - 1, column - 1), // top left
 				new Position(row - 1, column + 1), // top right
 				new Position(row + 1, column - 1), // bottom left
-				new Position(row + 1, column + 1)); // bottom right
+				new Position(row + 1, column + 1) // bottom right
+		));
 
-		return checkKingMoves(board, positions);
+		if (this.getMoveCount() == 0) {
+			checkKingCastleMove(board, possibleMoves);
+		}
+
+		return possibleMoves;
 	}
 
-	private boolean[][] checkKingMoves(Board board, List<Position> positions) {
-		boolean[][] possibleMoves = new boolean[board.getRows()][board.getColumns()];
-
+	private void checkKingStandardMoves(Board board, boolean[][] possibleMoves,
+			List<Position> positions) {
 		for (Position position : positions) {
 			if (checkValidMove(board, position, getColor())) {
 				possibleMoves[position.getRow()][position.getColumn()] = true;
 			}
 		}
+	}
 
-		return possibleMoves;
+	private void checkKingCastleMove(Board board, boolean[][] possibleMoves) {
+		int row = this.position.getRow();
+		int column = this.position.getColumn();
+		int kingsideRookColumn = column + 3;
+		int queensideRookColumn = column - 4;
+
+		Position p = new Position(row, kingsideRookColumn);
+		ChessPiece kingSideRook = (ChessPiece) board.getPiece(p.getRow(), p.getColumn());
+		boolean isKingsideRookPosValid = kingSideRook != null
+				&& kingSideRook.getColor() == this.getColor()
+				&& kingSideRook.getMoveCount() == 0;
+		boolean isKingsidePathClear = true;
+
+		Position pathPos = new Position(row, column + 1);
+		while (pathPos.getColumn() < kingsideRookColumn) {
+			isKingsidePathClear = isKingsidePathClear && !board.isThereAPiece(pathPos);
+			pathPos.setColumn(pathPos.getColumn() + 1);
+		}
+
+		if (isKingsideRookPosValid && isKingsidePathClear) {
+			possibleMoves[row][column + 2] = true;
+		}
+
+		p.setColumn(queensideRookColumn);
+		ChessPiece queensideRook = (ChessPiece) board
+				.getPiece(new Position(p.getRow(), p.getColumn()));
+		boolean isQueensideRookPosValid = queensideRook != null
+				&& queensideRook.getColor() == this.getColor()
+				&& queensideRook.getMoveCount() == 0;
+		boolean isQueensidePathClear = true;
+
+		pathPos.setColumn(column - 1);
+		while (pathPos.getColumn() > queensideRookColumn) {
+			isQueensidePathClear = isQueensidePathClear && !board.isThereAPiece(pathPos);
+			pathPos.setColumn(pathPos.getColumn() - 1);
+		}
+
+		if (isQueensideRookPosValid && isQueensidePathClear) {
+			possibleMoves[row][column - 2] = true;
+		}
 	}
 
 	private boolean checkValidMove(Board board, Position position, Color color) {
@@ -58,5 +107,11 @@ public class King extends ChessPiece {
 		ChessPiece piece = (ChessPiece) board.getPiece(position);
 
 		return piece == null || piece.getColor() != color;
+	}
+
+	private boolean checkRookCastling(Position position) {
+		ChessPiece p = (ChessPiece) this.getBoard().getPiece(position);
+
+		return p instanceof Rook && p.getColor() == this.getColor() && p.getMoveCount() == 0;
 	}
 }

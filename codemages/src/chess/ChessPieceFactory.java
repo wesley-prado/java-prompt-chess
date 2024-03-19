@@ -15,8 +15,10 @@ public final class ChessPieceFactory {
 	private ChessPieceFactory() {
 	}
 
-	public static ChessPiece createPiece(PieceType type, Board board,
+	public static ChessPiece createPiece(PieceType type, ChessMatch chessMatch,
 			Color color) {
+		Board board = chessMatch.getBoard();
+
 		switch (type) {
 			case ROOK:
 				return new Rook(board, color);
@@ -27,26 +29,26 @@ public final class ChessPieceFactory {
 			case QUEEN:
 				return new Queen(board, color);
 			case KING:
-				return new King(board, color);
+				return new King(board, color, chessMatch);
 			case PAWN:
-				return new Pawn(board, color);
+				return new Pawn(board, color, chessMatch);
 			default:
 				throw new IllegalArgumentException(
 						"Invalid piece type: " + type);
 		}
 	}
 
-	public static List<ChessPiece> createFirstRowPieces(Board board,
+	public static List<ChessPiece> createFirstRowPieces(ChessMatch chessMatch,
 			Color color) {
 		return List.of(
-				createPiece(PieceType.ROOK, board, color),
-				createPiece(PieceType.KNIGHT, board, color),
-				createPiece(PieceType.BISHOP, board, color),
-				createPiece(PieceType.QUEEN, board, color),
-				createPiece(PieceType.KING, board, color),
-				createPiece(PieceType.BISHOP, board, color),
-				createPiece(PieceType.KNIGHT, board, color),
-				createPiece(PieceType.ROOK, board, color));
+				createPiece(PieceType.ROOK, chessMatch, color),
+				createPiece(PieceType.KNIGHT, chessMatch, color),
+				createPiece(PieceType.BISHOP, chessMatch, color),
+				createPiece(PieceType.QUEEN, chessMatch, color),
+				createPiece(PieceType.KING, chessMatch, color),
+				createPiece(PieceType.BISHOP, chessMatch, color),
+				createPiece(PieceType.KNIGHT, chessMatch, color),
+				createPiece(PieceType.ROOK, chessMatch, color));
 	}
 
 	public enum PieceType {
