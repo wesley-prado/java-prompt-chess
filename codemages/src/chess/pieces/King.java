@@ -63,10 +63,7 @@ public class King extends ChessPiece {
 		int queensideRookColumn = column - 4;
 
 		Position p = new Position(row, kingsideRookColumn);
-		ChessPiece kingSideRook = (ChessPiece) board.getPiece(p.getRow(), p.getColumn());
-		boolean isKingsideRookPosValid = kingSideRook != null
-				&& kingSideRook.getColor() == this.getColor()
-				&& kingSideRook.getMoveCount() == 0;
+		boolean isKingsideRookPosValid = checkRookCastling(p);
 		boolean isKingsidePathClear = true;
 
 		Position pathPos = new Position(row, column + 1);
@@ -80,11 +77,7 @@ public class King extends ChessPiece {
 		}
 
 		p.setColumn(queensideRookColumn);
-		ChessPiece queensideRook = (ChessPiece) board
-				.getPiece(new Position(p.getRow(), p.getColumn()));
-		boolean isQueensideRookPosValid = queensideRook != null
-				&& queensideRook.getColor() == this.getColor()
-				&& queensideRook.getMoveCount() == 0;
+		boolean isQueensideRookPosValid = checkRookCastling(p);
 		boolean isQueensidePathClear = true;
 
 		pathPos.setColumn(column - 1);
@@ -111,7 +104,6 @@ public class King extends ChessPiece {
 
 	private boolean checkRookCastling(Position position) {
 		ChessPiece p = (ChessPiece) this.getBoard().getPiece(position);
-
 		return p instanceof Rook && p.getColor() == this.getColor() && p.getMoveCount() == 0;
 	}
 }
