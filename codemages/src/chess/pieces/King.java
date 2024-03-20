@@ -40,7 +40,7 @@ public class King extends ChessPiece {
 				new Position(row + 1, column + 1) // bottom right
 		));
 
-		if (this.getMoveCount() == 0) {
+		if (this.getMoveCount() == 0 && !this.chessMatch.getCheck()) {
 			checkKingCastleMove(board, possibleMoves);
 		}
 
