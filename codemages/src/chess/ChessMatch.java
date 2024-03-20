@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import boardgame.Board;
 import boardgame.Piece;
 import boardgame.Position;
-import chess.ChessPieceFactory.PieceType;
+import chess.constants.*;
 import chess.pieces.King;
 import chess.pieces.Pawn;
 
@@ -19,6 +19,7 @@ public class ChessMatch {
 	private boolean check;
 	private boolean checkMate;
 	private ChessPiece enPassantVulnerable;
+	private ChessPiece promoted;
 
 	public ChessMatch() {
 		turn = 1;
@@ -55,6 +56,10 @@ public class ChessMatch {
 		return this.enPassantVulnerable;
 	}
 
+	public ChessPiece getPromoted() {
+		return this.promoted;
+	}
+
 	public ChessPiece[][] getPieces() {
 		ChessPiece[][] matrix = new ChessPiece[board.getRows()][board
 				.getColumns()];
@@ -88,6 +93,17 @@ public class ChessMatch {
 			throw new ChessException("You can't put yourself in check");
 		}
 
+		ChessPiece movedPiece = (ChessPiece) board.getPiece(target);
+		this.promoted = null;
+		if (movedPiece instanceof Pawn) {
+			int expectedFinalRow = movedPiece.getColor() == Color.WHITE ? 0 : 7;
+
+			if (target.getRow() == expectedFinalRow) {
+				this.promoted = movedPiece;
+				this.promoted = replacePromotedPiece("Q");
+			}
+		}
+
 		this.check = isInCheck(opponent(this.currentPlayer));
 
 		if (this.isCheckMate(opponent(this.currentPlayer))) {
@@ -97,7 +113,6 @@ public class ChessMatch {
 			nextTurn();
 		}
 
-		ChessPiece movedPiece = (ChessPiece) board.getPiece(target);
 		if (movedPiece instanceof Pawn && (target.getRow() == source.getRow() + 2
 				|| target.getRow() == source.getRow() - 2)) {
 			this.enPassantVulnerable = movedPiece;
@@ -208,6 +223,39 @@ public class ChessMatch {
 			board.placePiece(capturedPiece, target);
 			this.capturedPieces.remove(capturedPiece);
 		}
+	}
+
+	public ChessPiece replacePromotedPiece(String type) {
+		if (this.promoted == null) {
+			throw new IllegalStateException("There is no piece to be promoted");
+		}
+
+		Position pos = this.promoted.getChessPosition().toPosition();
+		this.board.removePiece(pos);
+
+		PromotionPiece pPiece;
+		switch (type) {
+			case "Q":
+				pPiece = PromotionPiece.QUEEN;
+				break;
+			case "B":
+				pPiece = PromotionPiece.BISHOP;
+				break;
+			case "N":
+				pPiece = PromotionPiece.KNIGHT;
+				break;
+			case "R":
+				pPiece = PromotionPiece.ROOK;
+				break;
+			default:
+				throw new IllegalArgumentException("Invalid promotion piece type");
+		}
+
+		ChessPiece promotedPiece = ChessPieceFactory.createPiece(pPiece, this,
+				this.promoted.getColor());
+		this.board.placePiece(promotedPiece, pos);
+
+		return promotedPiece;
 	}
 
 	private Color opponent(Color color) {

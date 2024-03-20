@@ -10,9 +10,17 @@ import chess.pieces.Knight;
 import chess.pieces.Pawn;
 import chess.pieces.Queen;
 import chess.pieces.Rook;
+import chess.constants.PieceType;
+import chess.constants.PromotionPiece;
 
 public final class ChessPieceFactory {
 	private ChessPieceFactory() {
+	}
+
+	public static ChessPiece createPiece(PromotionPiece type, ChessMatch chessMatch,
+			Color color) {
+		PieceType pieceType = PieceType.valueOf(type.toString());
+		return createPiece(pieceType, chessMatch, color);
 	}
 
 	public static ChessPiece createPiece(PieceType type, ChessMatch chessMatch,
@@ -49,9 +57,5 @@ public final class ChessPieceFactory {
 				createPiece(PieceType.BISHOP, chessMatch, color),
 				createPiece(PieceType.KNIGHT, chessMatch, color),
 				createPiece(PieceType.ROOK, chessMatch, color));
-	}
-
-	public enum PieceType {
-		ROOK, KNIGHT, BISHOP, QUEEN, KING, PAWN
 	}
 }
