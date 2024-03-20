@@ -2,12 +2,16 @@ package chess.pieces;
 
 import boardgame.Board;
 import boardgame.Position;
+import chess.ChessMatch;
 import chess.ChessPiece;
 import chess.Color;
 
 public class Pawn extends ChessPiece {
-	public Pawn(Board chessboard, Color color) {
+	private ChessMatch chessMatch;
+
+	public Pawn(Board chessboard, Color color, ChessMatch chessMatch) {
 		super(chessboard, color);
+		this.chessMatch = chessMatch;
 	}
 
 	@Override
@@ -47,6 +51,8 @@ public class Pawn extends ChessPiece {
 				matrix[p.getRow()][p.getColumn()] = true;
 			}
 
+			checkEnPassantMovement(board, matrix);
+
 			return matrix;
 		}
 
@@ -72,6 +78,8 @@ public class Pawn extends ChessPiece {
 			matrix[p.getRow()][p.getColumn()] = true;
 		}
 
+		checkEnPassantMovement(board, matrix);
+
 		return matrix;
 	}
 
@@ -82,5 +90,24 @@ public class Pawn extends ChessPiece {
 	private boolean isDiagonalMovementValid(Board board, Position position) {
 		return board.isPositionValid(position) && board.isThereAPiece(position)
 				&& ((ChessPiece) board.getPiece(position)).getColor() != this.getColor();
+	}
+
+	private void checkEnPassantMovement(Board board, boolean[][] matrix) {
+		Position left = new Position(this.position.getRow(), this.position.getColumn() - 1);
+		Position right = new Position(this.position.getRow(), this.position.getColumn() + 1);
+		int squareCount = this.getColor() == Color.WHITE ? -1 : 1;
+
+		if (this.position.getRow() == 3 || this.position.getRow() == 4) {
+
+			if (board.isPositionValid(left) && board.isThereAPiece(left)
+					&& board.getPiece(left) == this.chessMatch.getEnPassantVulnerable()) {
+				matrix[left.getRow() + squareCount][left.getColumn()] = true;
+			}
+
+			if (board.isPositionValid(right) && board.isThereAPiece(right)
+					&& board.getPiece(right) == this.chessMatch.getEnPassantVulnerable()) {
+				matrix[right.getRow() + squareCount][right.getColumn()] = true;
+			}
+		}
 	}
 }
