@@ -100,7 +100,7 @@ public class ChessMatch {
 
 			if (target.getRow() == expectedFinalRow) {
 				this.promoted = movedPiece;
-				this.promoted = replacePromotedPiece("Q");
+				this.promoted = replacePromotedPiece(PromotionPiece.Q);
 			}
 		}
 
@@ -225,7 +225,7 @@ public class ChessMatch {
 		}
 	}
 
-	public ChessPiece replacePromotedPiece(String type) {
+	public ChessPiece replacePromotedPiece(PromotionPiece type) {
 		if (this.promoted == null) {
 			throw new IllegalStateException("There is no piece to be promoted");
 		}
@@ -233,25 +233,7 @@ public class ChessMatch {
 		Position pos = this.promoted.getChessPosition().toPosition();
 		this.board.removePiece(pos);
 
-		PromotionPiece pPiece;
-		switch (type) {
-			case "Q":
-				pPiece = PromotionPiece.QUEEN;
-				break;
-			case "B":
-				pPiece = PromotionPiece.BISHOP;
-				break;
-			case "N":
-				pPiece = PromotionPiece.KNIGHT;
-				break;
-			case "R":
-				pPiece = PromotionPiece.ROOK;
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid promotion piece type");
-		}
-
-		ChessPiece promotedPiece = ChessPieceFactory.createPiece(pPiece, this,
+		ChessPiece promotedPiece = ChessPieceFactory.createPiece(type, this,
 				this.promoted.getColor());
 		this.board.placePiece(promotedPiece, pos);
 
@@ -333,8 +315,23 @@ public class ChessMatch {
 	}
 
 	private void initialSetup() {
-		placePieces(Color.WHITE);
-		placePieces(Color.BLACK);
+		placePiece(ChessPieceFactory.createPiece(PieceType.ROOK, this, Color.WHITE),
+				new ChessPosition('a', 1));
+		placePiece(ChessPieceFactory.createPiece(PieceType.KING, this, Color.WHITE),
+				new ChessPosition('e', 1));
+		placePiece(ChessPieceFactory.createPiece(PieceType.ROOK, this, Color.WHITE),
+				new ChessPosition('h', 1));
+		placePiece(ChessPieceFactory.createPiece(PieceType.PAWN, this, Color.WHITE),
+				new ChessPosition('b', 5));
+
+		placePiece(ChessPieceFactory.createPiece(PieceType.ROOK, this, Color.BLACK),
+				new ChessPosition('a', 8));
+		placePiece(ChessPieceFactory.createPiece(PieceType.KING, this, Color.BLACK),
+				new ChessPosition('e', 8));
+		placePiece(ChessPieceFactory.createPiece(PieceType.ROOK, this, Color.BLACK),
+				new ChessPosition('h', 8));
+		// placePieces(Color.WHITE);
+		// placePieces(Color.BLACK);
 	}
 
 	private void placePieces(Color color) {
