@@ -19,7 +19,7 @@ public final class ChessPieceFactory {
 
 	public static ChessPiece createPiece(PromotionPiece type, ChessMatch chessMatch,
 			Color color) {
-		PieceType pieceType = PieceType.valueOf(type.toString());
+		PieceType pieceType = PieceType.valueOf(type.getName());
 		return createPiece(pieceType, chessMatch, color);
 	}
 

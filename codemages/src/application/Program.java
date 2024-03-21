@@ -1,10 +1,12 @@
 package application;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import chess.ChessException;
 import chess.ChessMatch;
 import chess.ChessPosition;
+import chess.constants.PromotionPiece;
 
 public class Program {
 	public static void main(String[] args) {
@@ -31,12 +33,10 @@ public class Program {
 				chessMatch.performChessMove(source, target);
 
 				if (chessMatch.getPromoted() != null) {
-					System.out.print("Enter piece for promotion (B/N/R/Q): ");
-					String type = sc.nextLine();
-					chessMatch.replacePromotedPiece(type);
+					chessMatch.replacePromotedPiece(readPromotionPiece(sc));
 				}
 			}
-			catch (ChessException e) {
+			catch (InputMismatchException | ChessException e) {
 				System.out.println(e.getMessage());
 				sc.nextLine();
 			}
@@ -44,5 +44,22 @@ public class Program {
 
 		UI.clearScreen();
 		UI.printMatch(chessMatch);
+	}
+
+	private static PromotionPiece readPromotionPiece(Scanner sc) {
+		PromotionPiece promoPiece = null;
+
+		while (promoPiece == null) {
+			System.out.print("Enter piece for promotion (B/N/R/Q): ");
+
+			try {
+				promoPiece = PromotionPiece.valueOf(sc.nextLine().toUpperCase());
+			}
+			catch (Exception e) {
+				promoPiece = null;
+			}
+		}
+
+		return promoPiece;
 	}
 }

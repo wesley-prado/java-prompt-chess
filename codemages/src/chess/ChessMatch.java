@@ -100,7 +100,7 @@ public class ChessMatch {
 
 			if (target.getRow() == expectedFinalRow) {
 				this.promoted = movedPiece;
-				this.promoted = replacePromotedPiece("Q");
+				this.promoted = replacePromotedPiece(PromotionPiece.Q);
 			}
 		}
 
@@ -225,7 +225,7 @@ public class ChessMatch {
 		}
 	}
 
-	public ChessPiece replacePromotedPiece(String type) {
+	public ChessPiece replacePromotedPiece(PromotionPiece type) {
 		if (this.promoted == null) {
 			throw new IllegalStateException("There is no piece to be promoted");
 		}
@@ -233,25 +233,7 @@ public class ChessMatch {
 		Position pos = this.promoted.getChessPosition().toPosition();
 		this.board.removePiece(pos);
 
-		PromotionPiece pPiece;
-		switch (type) {
-			case "Q":
-				pPiece = PromotionPiece.QUEEN;
-				break;
-			case "B":
-				pPiece = PromotionPiece.BISHOP;
-				break;
-			case "N":
-				pPiece = PromotionPiece.KNIGHT;
-				break;
-			case "R":
-				pPiece = PromotionPiece.ROOK;
-				break;
-			default:
-				throw new IllegalArgumentException("Invalid promotion piece type");
-		}
-
-		ChessPiece promotedPiece = ChessPieceFactory.createPiece(pPiece, this,
+		ChessPiece promotedPiece = ChessPieceFactory.createPiece(type, this,
 				this.promoted.getColor());
 		this.board.placePiece(promotedPiece, pos);
 
